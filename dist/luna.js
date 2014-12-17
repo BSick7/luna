@@ -71,55 +71,60 @@ var luna;
                 this.$$idField = "id";
             }
             HttpResource.prototype.get = function (id) {
-                var request = new http.HttpRequest().config({
-                    method: 'GET',
-                    url: this.createUrl(id)
-                }).send();
+                var _this = this;
                 return new Promise(function (resolve, reject) {
-                    request.then(function (res) { return resolve(res.response); }, reject);
+                    return _this.createRequest({
+                        method: 'GET',
+                        type: 'json',
+                        url: _this.createUrl(id)
+                    }).send().then(function (res) { return resolve(res.response); }, reject);
                 });
             };
             HttpResource.prototype.query = function (query) {
-                var request = new http.HttpRequest().config({
-                    method: 'GET',
-                    url: this.createUrl()
-                }).send(JSON.stringify(query));
+                var _this = this;
                 return new Promise(function (resolve, reject) {
-                    request.then(function (res) { return resolve(res.response); }, reject);
+                    _this.createRequest({
+                        method: 'GET',
+                        type: 'json',
+                        url: _this.createUrl()
+                    }).send(JSON.stringify(query)).then(function (res) { return resolve(res.response); }, reject);
                 });
             };
             HttpResource.prototype.post = function (t) {
-                var request = new http.HttpRequest().config({
-                    method: 'POST',
-                    type: 'json',
-                    url: this.createUrl()
-                }).send(JSON.stringify(t));
+                var _this = this;
                 return new Promise(function (resolve, reject) {
-                    request.then(function (res) { return resolve(res.response); }, reject);
+                    _this.createRequest({
+                        method: 'POST',
+                        type: 'json',
+                        url: _this.createUrl()
+                    }).send(JSON.stringify(t)).then(function (res) { return resolve(res.response); }, reject);
                 });
             };
             HttpResource.prototype.put = function (id, t) {
-                var request = new http.HttpRequest().config({
-                    method: 'PUT',
-                    type: 'json',
-                    url: this.createUrl(id)
-                }).send(JSON.stringify(t));
+                var _this = this;
                 return new Promise(function (resolve, reject) {
-                    request.then(function (res) { return resolve(res.response); }, reject);
+                    _this.createRequest({
+                        method: 'PUT',
+                        type: 'json',
+                        url: _this.createUrl(id)
+                    }).send(JSON.stringify(t)).then(function (res) { return resolve(res.response); }, reject);
                 });
             };
             HttpResource.prototype.remove = function (id) {
-                var request = new http.HttpRequest().config({
-                    method: 'DELETE',
-                    type: 'json',
-                    url: this.createUrl(id)
-                }).send();
+                var _this = this;
                 return new Promise(function (resolve, reject) {
-                    request.then(function (res) { return resolve(res.response); }, reject);
+                    _this.createRequest({
+                        method: 'DELETE',
+                        type: 'json',
+                        url: _this.createUrl(id)
+                    }).send().then(function (res) { return resolve(res.response); }, reject);
                 });
             };
             HttpResource.prototype.createUrl = function (id) {
                 return this.$$templateParts.join('/').replace(':' + this.$$idField, id.toString());
+            };
+            HttpResource.prototype.createRequest = function (config) {
+                return new http.HttpRequest().config(config);
             };
             return HttpResource;
         })();

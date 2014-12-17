@@ -2,7 +2,7 @@ declare module luna {
     var version: string;
 }
 declare module luna.http {
-    interface IHttpRequest {
+    interface IHttpRequest extends Thenable<HttpResponse> {
         config(config: IHttpConfig): IHttpRequest;
         header(name: string, value: string): IHttpRequest;
         send(): IHttpRequest;
@@ -14,15 +14,7 @@ declare module luna.http {
         send(data: FormData): IHttpRequest;
         cancel(): boolean;
     }
-    interface IHttpConfig {
-        method: string;
-        url: string;
-        user?: string;
-        password?: string;
-        timeout?: number;
-        type?: string;
-    }
-    class HttpRequest implements Thenable<HttpResponse>, IHttpRequest {
+    class HttpRequest implements IHttpRequest {
         private $$config;
         private $$xhr;
         private $$resolve;
@@ -58,6 +50,7 @@ declare module luna.http {
         put(id: any, t: T): Promise<T>;
         remove(id: any): Promise<any>;
         createUrl(id?: any): string;
+        createRequest(config: IHttpConfig): IHttpRequest;
     }
 }
 declare module luna.http {
@@ -82,5 +75,15 @@ declare module luna.http {
         static normal(xhr: XMLHttpRequest): HttpResponse;
         static timeout(xhr: XMLHttpRequest): HttpResponse;
         static cancel(xhr: XMLHttpRequest): HttpResponse;
+    }
+}
+declare module luna.http {
+    interface IHttpConfig {
+        method: string;
+        url: string;
+        user?: string;
+        password?: string;
+        timeout?: number;
+        type?: string;
     }
 }

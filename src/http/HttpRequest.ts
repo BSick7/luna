@@ -1,5 +1,5 @@
 module luna.http {
-    export interface IHttpRequest {
+    export interface IHttpRequest extends Thenable<HttpResponse> {
         config(config: IHttpConfig): IHttpRequest;
         header(name: string, value: string): IHttpRequest;
         send(): IHttpRequest;
@@ -12,16 +12,7 @@ module luna.http {
         cancel(): boolean;
     }
 
-    export interface IHttpConfig {
-        method: string;
-        url: string;
-        user?: string;
-        password?: string;
-        timeout?: number;
-        type?: string;
-    }
-
-    export class HttpRequest implements Thenable<HttpResponse>, IHttpRequest {
+    export class HttpRequest implements IHttpRequest {
         private $$config: IHttpConfig;
         private $$xhr = new XMLHttpRequest();
         private $$resolve: (result: any) => void;
