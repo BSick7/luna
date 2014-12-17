@@ -1,0 +1,16 @@
+{
+  "name": "luna",
+  "version": "0.1.0",
+  "ignore": [
+    "build",
+    "src",
+    "test",
+    "typings",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "qunit": "~1.15.0"
+  }
+}
