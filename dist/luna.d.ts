@@ -3,7 +3,6 @@ declare module luna {
 }
 declare module luna.http {
     interface IHttpRequest {
-        url(url: string): IHttpRequest;
         config(config: IHttpConfig): IHttpRequest;
         header(name: string, value: string): IHttpRequest;
         send(): IHttpRequest;
@@ -30,7 +29,6 @@ declare module luna.http {
         private $$reject;
         private $$promise;
         constructor();
-        url(url: string): HttpRequest;
         config(config: IHttpConfig): HttpRequest;
         header(name: string, value: string): HttpRequest;
         send(): HttpRequest;
@@ -47,6 +45,19 @@ declare module luna.http {
         then<U>(onFulfilled?: (value: HttpResponse) => Thenable<U>, onRejected?: (error: any) => void): Thenable<U>;
         then<U>(onFulfilled?: (value: HttpResponse) => U, onRejected?: (error: any) => Thenable<U>): Thenable<U>;
         then<U>(onFulfilled?: (value: HttpResponse) => U, onRejected?: (error: any) => U): Thenable<U>;
+    }
+}
+declare module luna.http {
+    class HttpResource<T> {
+        private $$templateParts;
+        private $$idField;
+        constructor(templateUrl: string, idField?: string);
+        get(id: any): Promise<T>;
+        query(query: any): Thenable<T[]>;
+        post(t: T): Promise<T>;
+        put(id: any, t: T): Promise<T>;
+        remove(id: any): Promise<any>;
+        createUrl(id?: any): string;
     }
 }
 declare module luna.http {

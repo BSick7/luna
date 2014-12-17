@@ -15,10 +15,6 @@ var luna;
                     _this.$$reject = reject;
                 });
             }
-            HttpRequest.prototype.url = function (url) {
-                this.$$config.url = url;
-                return this;
-            };
             HttpRequest.prototype.config = function (config) {
                 var curconfig = this.$$config = this.$$config || { method: "GET", url: "" };
                 for (var i = 0, keys = Object.keys(config); i < keys.length; i++) {
@@ -63,6 +59,71 @@ var luna;
             return HttpRequest;
         })();
         http.HttpRequest = HttpRequest;
+    })(http = luna.http || (luna.http = {}));
+})(luna || (luna = {}));
+var luna;
+(function (luna) {
+    var http;
+    (function (http) {
+        var HttpResource = (function () {
+            function HttpResource(templateUrl, idField) {
+                this.$$templateParts = templateUrl.split('/');
+                this.$$idField = "id";
+            }
+            HttpResource.prototype.get = function (id) {
+                var request = new http.HttpRequest().config({
+                    method: 'GET',
+                    url: this.createUrl(id)
+                }).send();
+                return new Promise(function (resolve, reject) {
+                    request.then(function (res) { return resolve(res.response); }, reject);
+                });
+            };
+            HttpResource.prototype.query = function (query) {
+                var request = new http.HttpRequest().config({
+                    method: 'GET',
+                    url: this.createUrl()
+                }).send(JSON.stringify(query));
+                return new Promise(function (resolve, reject) {
+                    request.then(function (res) { return resolve(res.response); }, reject);
+                });
+            };
+            HttpResource.prototype.post = function (t) {
+                var request = new http.HttpRequest().config({
+                    method: 'POST',
+                    type: 'json',
+                    url: this.createUrl()
+                }).send(JSON.stringify(t));
+                return new Promise(function (resolve, reject) {
+                    request.then(function (res) { return resolve(res.response); }, reject);
+                });
+            };
+            HttpResource.prototype.put = function (id, t) {
+                var request = new http.HttpRequest().config({
+                    method: 'PUT',
+                    type: 'json',
+                    url: this.createUrl(id)
+                }).send(JSON.stringify(t));
+                return new Promise(function (resolve, reject) {
+                    request.then(function (res) { return resolve(res.response); }, reject);
+                });
+            };
+            HttpResource.prototype.remove = function (id) {
+                var request = new http.HttpRequest().config({
+                    method: 'DELETE',
+                    type: 'json',
+                    url: this.createUrl(id)
+                }).send();
+                return new Promise(function (resolve, reject) {
+                    request.then(function (res) { return resolve(res.response); }, reject);
+                });
+            };
+            HttpResource.prototype.createUrl = function (id) {
+                return this.$$templateParts.join('/').replace(':' + this.$$idField, id.toString());
+            };
+            return HttpResource;
+        })();
+        http.HttpResource = HttpResource;
     })(http = luna.http || (luna.http = {}));
 })(luna || (luna = {}));
 var luna;
