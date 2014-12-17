@@ -21,6 +21,7 @@ declare module luna.http {
         user?: string;
         password?: string;
         timeout?: number;
+        type?: string;
     }
     class HttpRequest implements Thenable<HttpResponse>, IHttpRequest {
         private $$config;

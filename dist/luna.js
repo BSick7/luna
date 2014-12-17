@@ -36,6 +36,7 @@ var luna;
                 var config = this.$$config;
                 var xhr = this.$$xhr;
                 xhr.timeout = config.timeout || 0;
+                xhr.responseType = config.type || "";
                 xhr.open(config.method, config.url, true, config.user, config.password);
                 xhr.send(data);
                 xhr.ontimeout = function (ev) { return _this.$$reject(http.HttpResponse.timeout(xhr)); };

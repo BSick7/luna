@@ -19,6 +19,7 @@ module luna.http {
         user?: string;
         password?: string;
         timeout?: number;
+        type?: string;
     }
 
     export class HttpRequest implements Thenable<HttpResponse>, IHttpRequest {
@@ -65,6 +66,7 @@ module luna.http {
             var config = this.$$config;
             var xhr = this.$$xhr;
             xhr.timeout = config.timeout || 0;
+            xhr.responseType = config.type || "";
             xhr.open(config.method, config.url, true, config.user, config.password);
             xhr.send(data);
             xhr.ontimeout = (ev) => this.$$reject(HttpResponse.timeout(xhr));
