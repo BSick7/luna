@@ -45,7 +45,7 @@ declare module luna.http {
         private $$idField;
         constructor(templateUrl: string, idField?: string);
         get(id: any): Promise<T>;
-        query(query: any): Thenable<T[]>;
+        query(query: any): Promise<T[]>;
         post(t: T): Promise<T>;
         put(id: any, t: T): Promise<T>;
         remove(id: any): Promise<any>;

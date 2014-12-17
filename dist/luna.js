@@ -68,7 +68,7 @@ var luna;
         var HttpResource = (function () {
             function HttpResource(templateUrl, idField) {
                 this.$$templateParts = templateUrl.split('/');
-                this.$$idField = "id";
+                this.$$idField = idField || "id";
             }
             HttpResource.prototype.get = function (id) {
                 var _this = this;
