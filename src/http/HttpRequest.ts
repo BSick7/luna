@@ -1,6 +1,5 @@
 module luna.http {
     export interface IHttpRequest {
-        url(url: string): IHttpRequest;
         config(config: IHttpConfig): IHttpRequest;
         header(name: string, value: string): IHttpRequest;
         send(): IHttpRequest;
@@ -34,11 +33,6 @@ module luna.http {
                 this.$$resolve = resolve;
                 this.$$reject = reject;
             });
-        }
-
-        url (url: string): HttpRequest {
-            this.$$config.url = url;
-            return this;
         }
 
         config (config: IHttpConfig): HttpRequest {
