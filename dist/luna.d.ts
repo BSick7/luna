@@ -65,6 +65,7 @@ declare module luna.http {
         statusText: string;
         response: any;
         responseText: string;
+        responseJson: any;
         constructor(xhr: XMLHttpRequest);
         static normal(xhr: XMLHttpRequest): HttpResponse;
         static timeout(xhr: XMLHttpRequest): HttpResponse;

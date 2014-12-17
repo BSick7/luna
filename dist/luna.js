@@ -102,6 +102,15 @@ var luna;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(HttpResponse.prototype, "responseJson", {
+                get: function () {
+                    if (this.$$xhr.responseType === "json")
+                        return this.$$xhr.response;
+                    return JSON.parse(this.$$xhr.responseText);
+                },
+                enumerable: true,
+                configurable: true
+            });
             HttpResponse.normal = function (xhr) {
                 var response = new HttpResponse(xhr);
                 Object.freeze(this);

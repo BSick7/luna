@@ -29,6 +29,12 @@ module luna.http {
             return this.$$xhr.responseText;
         }
 
+        get responseJson (): any {
+            if (this.$$xhr.responseType === "json")
+                return this.$$xhr.response;
+            return JSON.parse(this.$$xhr.responseText);
+        }
+
         constructor (xhr: XMLHttpRequest) {
             this.$$xhr = xhr;
         }
