@@ -8,9 +8,9 @@
     "typings",
     "Gruntfile.js"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "qunit": "~1.15.0"
+    "qunit": "~1.15.0",
+    "promise-polyfill": "~1.1.4"
   }
 }
