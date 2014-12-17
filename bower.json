@@ -8,9 +8,10 @@
     "typings",
     "Gruntfile.js"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "es6-promise": "~2.0.0"
+  },
   "devDependencies": {
-    "qunit": "~1.15.0",
-    "promise-polyfill": "~1.1.4"
+    "qunit": "~1.15.0"
   }
 }
