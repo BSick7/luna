@@ -87,7 +87,7 @@ module luna.http {
         }
 
         private $$isError (response: HttpResponse): boolean {
-            return response.status !== 200;
+            return response.status >= 400;
         }
 
         then<U>(onFulfilled?: (value: HttpResponse) => Thenable<U>, onRejected?: (error: any) => Thenable<U>): Thenable<U>;

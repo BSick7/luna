@@ -54,7 +54,7 @@ var luna;
                 return true;
             };
             HttpRequest.prototype.$$isError = function (response) {
-                return response.status !== 200;
+                return response.status >= 400;
             };
             HttpRequest.prototype.then = function (onFulfilled, onRejected) {
                 return this.$$promise.then(onFulfilled, onRejected);
