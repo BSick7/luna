@@ -58,7 +58,7 @@ module.exports = function (grunt) {
         typescript: {
             build: {
                 src: [
-                    'typings/*.d.ts',
+                    'typings/**/*.d.ts',
                     './src/_Version.ts',
                     './src/*.ts',
                     './src/**/*.ts'
@@ -72,7 +72,7 @@ module.exports = function (grunt) {
             },
             test: {
                 src: [
-                    'typings/*.d.ts',
+                    'typings/**/*.d.ts',
                     '<%= dirs.test.root %>/**/*.ts',
                     '!<%= dirs.test.lib %>/**/*.ts',
                     'dist/<%= meta.name %>.d.ts'
