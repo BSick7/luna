@@ -13,7 +13,6 @@ var luna;
                     _this.$$resolve = resolve;
                     _this.$$reject = reject;
                 });
-                this.$$xhr = this.createRawRequest();
             }
             HttpRequest.prototype.createRawRequest = function () {
                 return new XMLHttpRequest();
@@ -27,13 +26,14 @@ var luna;
                 return this;
             };
             HttpRequest.prototype.header = function (name, value) {
+                this.$$xhr = this.$$xhr || this.createRawRequest();
                 this.$$xhr.setRequestHeader(name, value);
                 return this;
             };
             HttpRequest.prototype.send = function (data) {
                 var _this = this;
                 var config = this.$$config;
-                var xhr = this.$$xhr;
+                var xhr = this.$$xhr = this.$$xhr || this.createRawRequest();
                 xhr.timeout = config.timeout || 0;
                 xhr.responseType = config.type || "";
                 xhr.open(config.method, config.url, true, config.user, config.password);
@@ -124,7 +124,10 @@ var luna;
                 });
             };
             HttpResource.prototype.createUrl = function (id) {
-                return this.$$templateParts.join('/').replace(':' + this.$$idField, id.toString());
+                var url = this.$$templateParts.join('/');
+                if (id != null)
+                    return url.replace(':' + this.$$idField, id.toString());
+                return url.replace(':' + this.$$idField, '');
             };
             HttpResource.prototype.createRequest = function (config) {
                 return new http.HttpRequest().config(config);

@@ -74,9 +74,11 @@ module luna.http {
         }
 
         createUrl (id?: any): string {
-            return this.$$templateParts
-                .join('/')
-                .replace(':' + this.$$idField, id.toString());
+            var url = this.$$templateParts
+                .join('/');
+            if (id != null)
+                return url.replace(':' + this.$$idField, id.toString());
+            return url.replace(':' + this.$$idField, '');
         }
 
         createRequest (config: IHttpConfig): IHttpRequest {

@@ -24,7 +24,6 @@ module luna.http {
                 this.$$resolve = resolve;
                 this.$$reject = reject;
             });
-            this.$$xhr = this.createRawRequest();
         }
 
         createRawRequest (): IRawRequest {
@@ -41,6 +40,7 @@ module luna.http {
         }
 
         header (name: string, value: string): HttpRequest {
+            this.$$xhr = this.$$xhr || this.createRawRequest();
             this.$$xhr.setRequestHeader(name, value);
             return this;
         }
@@ -54,7 +54,7 @@ module luna.http {
         send (data: FormData): HttpRequest;
         send (data?: any): HttpRequest {
             var config = this.$$config;
-            var xhr = this.$$xhr;
+            var xhr = this.$$xhr = this.$$xhr || this.createRawRequest();
             xhr.timeout = config.timeout || 0;
             xhr.responseType = config.type || "";
             xhr.open(config.method, config.url, true, config.user, config.password);

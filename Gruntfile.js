@@ -49,7 +49,7 @@ module.exports = function (grunt) {
             test: {
                 files: [
                     { src: './lib/qunit', dest: '<%= dirs.test.lib %>/qunit' },
-                    { src: './lib/es6-promise', dest: '<%= dirs.test.lib %>/es6-promise' },
+                    { src: './lib/es6-promise-polyfill', dest: '<%= dirs.test.lib %>/es6-promise-polyfill' },
                     { src: './dist', dest: '<%= dirs.test.lib %>/<%= meta.name %>/dist' },
                     { src: './src', dest: '<%= dirs.test.lib %>/<%= meta.name %>/src' }
                 ]
