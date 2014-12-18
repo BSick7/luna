@@ -41,3 +41,28 @@ resource.get(...)
         //status.isCancel
     });
 ```
+
+
+### Sub Resources
+
+```
+interface IUser {
+    id: number;
+    username: string;
+}
+interface IOrganization {
+    id: number;
+    name: string;
+}
+interface IOrganizationResource {
+    users: HttpResource<IUser>
+}
+
+var orgs = luna.http.HttpResource<IOrganization>("/orgs/:id")
+    .sub<IOrganizationResource>({
+        users: luna.http.HttpResource<IUser>("/users/:id")
+    });
+
+orgs.get(1).then(org => { }); //Get organization with id: 1
+orgs(1).users.get(2).then(user => { }); //Get user with id: 2 in organization id: 1
+```
