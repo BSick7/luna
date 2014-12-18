@@ -54,7 +54,7 @@ interface IOrganization {
     id: number;
     name: string;
 }
-interface IOrganizationResource extends HttpResource<IOrganization> {
+interface IOrganizationResource {
     users: HttpResource<IUser>;
 }
 
