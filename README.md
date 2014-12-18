@@ -55,7 +55,7 @@ interface IOrganization {
     name: string;
 }
 interface IOrganizationResource {
-    users: HttpResource<IUser>
+    users: HttpResource<IUser>;
 }
 
 var orgs = luna.http.HttpResource<IOrganization>("/orgs/:id")
