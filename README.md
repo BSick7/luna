@@ -58,10 +58,9 @@ interface IOrganizationResource {
     users: HttpResource<IUser>;
 }
 
-var orgs = luna.http.HttpResource<IOrganization>("/orgs/:id")
-    .sub<IOrganizationResource>({
-        users: luna.http.HttpResource<IUser>("/users/:id")
-    });
+var orgs = luna.http.HttpResource<IOrganization, IOrganizationResource>("/orgs/:id", null, {
+    users: luna.http.HttpResource<IUser>("/users/:id")
+});
 
 orgs.get(1).then(org => { }); //Get organization with id: 1
 orgs(1).users.get(2).then(user => { }); //Get user with id: 2 in organization id: 1
