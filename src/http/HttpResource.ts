@@ -1,13 +1,60 @@
 module luna.http {
-    export class HttpResource<T> {
-        private $$templateParts: string[];
-        private $$idField: string;
+    export interface IHttpResource<T, TSub> {
+        templateUrl: string;
+        idField: string;
+        (baseId: any): TSub;
+        get(id: any): Promise<T>;
+        query(query: any): Promise<T[]>;
+        post(t: T): Promise<T>;
+        put(id: any, t: T): Promise<T>;
+        remove(id: any): Promise<any>;
+        createUrl(id?: any): string;
+        createRequest (config: IHttpConfig): IHttpRequest;
+    }
 
-        constructor (templateUrl: string, idField?: string) {
-            this.$$templateParts = templateUrl.split('/');
-            this.$$idField = idField || "id";
-        }
+    export function HttpResource<T, TSub>(templateUrl: string, idField?: string, subs?: any) {
+        idField = idField || "id";
 
+        var res: IHttpResource<T, TSub> = <any>function (baseId: any): TSub {
+            if (!subs)
+                return <any>{};
+
+            var actual = {};
+            var baseUrl = templateUrl.replace(':' + idField, baseId.toString());
+            for (var i = 0, keys = Object.keys(subs); i < keys.length; i++) {
+                var key = keys[i];
+                Object.defineProperty(actual, key, {
+                    get: function () {
+                        return SubHttpResource(baseUrl, subs[key]);
+                    }
+                });
+            }
+            Object.freeze(actual);
+            return <TSub>actual;
+        };
+
+        res.templateUrl = templateUrl;
+        res.idField = idField;
+        (<any>res).$$subs = subs;
+
+        res.get = HiddenHttpResource.prototype.get.bind(res);
+        res.query = HiddenHttpResource.prototype.query.bind(res);
+        res.post = HiddenHttpResource.prototype.post.bind(res);
+        res.put = HiddenHttpResource.prototype.put.bind(res);
+        res.remove = HiddenHttpResource.prototype.remove.bind(res);
+        res.createUrl = function (id?: any): string {
+            return templateUrl.replace(':' + idField, (id != null) ? id.toString() : '');
+        };
+        res.createRequest = HiddenHttpResource.prototype.createRequest.bind(res);
+
+        return res;
+    }
+
+    export function SubHttpResource<T, TSub>(baseUrl: string, resource: IHttpResource<T, TSub>): IHttpResource<T, TSub> {
+        return HttpResource<T, TSub>(baseUrl + resource.templateUrl, resource.idField, (<any>resource).$$subs);
+    }
+
+    class HiddenHttpResource<T, TSub> {
         get (id: any): Promise<T> {
             return new Promise((resolve, reject) => {
                 return this
@@ -74,11 +121,7 @@ module luna.http {
         }
 
         createUrl (id?: any): string {
-            var url = this.$$templateParts
-                .join('/');
-            if (id != null)
-                return url.replace(':' + this.$$idField, id.toString());
-            return url.replace(':' + this.$$idField, '');
+            return "";
         }
 
         createRequest (config: IHttpConfig): IHttpRequest {

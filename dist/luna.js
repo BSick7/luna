@@ -68,12 +68,47 @@ var luna;
 (function (luna) {
     var http;
     (function (http) {
-        var HttpResource = (function () {
-            function HttpResource(templateUrl, idField) {
-                this.$$templateParts = templateUrl.split('/');
-                this.$$idField = idField || "id";
+        function HttpResource(templateUrl, idField, subs) {
+            idField = idField || "id";
+            var res = function (baseId) {
+                if (!subs)
+                    return {};
+                var actual = {};
+                var baseUrl = templateUrl.replace(':' + idField, baseId.toString());
+                for (var i = 0, keys = Object.keys(subs); i < keys.length; i++) {
+                    var key = keys[i];
+                    Object.defineProperty(actual, key, {
+                        get: function () {
+                            return SubHttpResource(baseUrl, subs[key]);
+                        }
+                    });
+                }
+                Object.freeze(actual);
+                return actual;
+            };
+            res.templateUrl = templateUrl;
+            res.idField = idField;
+            res.$$subs = subs;
+            res.get = HiddenHttpResource.prototype.get.bind(res);
+            res.query = HiddenHttpResource.prototype.query.bind(res);
+            res.post = HiddenHttpResource.prototype.post.bind(res);
+            res.put = HiddenHttpResource.prototype.put.bind(res);
+            res.remove = HiddenHttpResource.prototype.remove.bind(res);
+            res.createUrl = function (id) {
+                return templateUrl.replace(':' + idField, (id != null) ? id.toString() : '');
+            };
+            res.createRequest = HiddenHttpResource.prototype.createRequest.bind(res);
+            return res;
+        }
+        http.HttpResource = HttpResource;
+        function SubHttpResource(baseUrl, resource) {
+            return HttpResource(baseUrl + resource.templateUrl, resource.idField, resource.$$subs);
+        }
+        http.SubHttpResource = SubHttpResource;
+        var HiddenHttpResource = (function () {
+            function HiddenHttpResource() {
             }
-            HttpResource.prototype.get = function (id) {
+            HiddenHttpResource.prototype.get = function (id) {
                 var _this = this;
                 return new Promise(function (resolve, reject) {
                     return _this.createRequest({
@@ -83,7 +118,7 @@ var luna;
                     }).send().then(function (res) { return resolve(res.response); }, reject);
                 });
             };
-            HttpResource.prototype.query = function (query) {
+            HiddenHttpResource.prototype.query = function (query) {
                 var _this = this;
                 return new Promise(function (resolve, reject) {
                     _this.createRequest({
@@ -93,7 +128,7 @@ var luna;
                     }).send(JSON.stringify(query)).then(function (res) { return resolve(res.response); }, reject);
                 });
             };
-            HttpResource.prototype.post = function (t) {
+            HiddenHttpResource.prototype.post = function (t) {
                 var _this = this;
                 return new Promise(function (resolve, reject) {
                     _this.createRequest({
@@ -103,7 +138,7 @@ var luna;
                     }).send(JSON.stringify(t)).then(function (res) { return resolve(res.response); }, reject);
                 });
             };
-            HttpResource.prototype.put = function (id, t) {
+            HiddenHttpResource.prototype.put = function (id, t) {
                 var _this = this;
                 return new Promise(function (resolve, reject) {
                     _this.createRequest({
@@ -113,7 +148,7 @@ var luna;
                     }).send(JSON.stringify(t)).then(function (res) { return resolve(res.response); }, reject);
                 });
             };
-            HttpResource.prototype.remove = function (id) {
+            HiddenHttpResource.prototype.remove = function (id) {
                 var _this = this;
                 return new Promise(function (resolve, reject) {
                     _this.createRequest({
@@ -123,18 +158,14 @@ var luna;
                     }).send().then(function (res) { return resolve(res.response); }, reject);
                 });
             };
-            HttpResource.prototype.createUrl = function (id) {
-                var url = this.$$templateParts.join('/');
-                if (id != null)
-                    return url.replace(':' + this.$$idField, id.toString());
-                return url.replace(':' + this.$$idField, '');
+            HiddenHttpResource.prototype.createUrl = function (id) {
+                return "";
             };
-            HttpResource.prototype.createRequest = function (config) {
+            HiddenHttpResource.prototype.createRequest = function (config) {
                 return new http.HttpRequest().config(config);
             };
-            return HttpResource;
+            return HiddenHttpResource;
         })();
-        http.HttpResource = HttpResource;
     })(http = luna.http || (luna.http = {}));
 })(luna || (luna = {}));
 var luna;
@@ -205,5 +236,25 @@ var luna;
         })();
         http.HttpResponse = HttpResponse;
     })(http = luna.http || (luna.http = {}));
+})(luna || (luna = {}));
+var luna;
+(function (luna) {
+    var polyfill;
+    (function (polyfill) {
+        if (!Function.prototype.bind) {
+            Function.prototype.bind = function (oThis) {
+                if (typeof this !== 'function') {
+                    throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+                }
+                var aArgs = Array.prototype.slice.call(arguments, 1), fToBind = this, fNOP = function () {
+                }, fBound = function () {
+                    return fToBind.apply(this instanceof fNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
+                };
+                fNOP.prototype = this.prototype;
+                fBound.prototype = new fNOP();
+                return fBound;
+            };
+        }
+    })(polyfill = luna.polyfill || (luna.polyfill = {}));
 })(luna || (luna = {}));
 //# sourceMappingURL=luna.js.map

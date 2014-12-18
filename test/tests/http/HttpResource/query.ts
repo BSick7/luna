@@ -8,7 +8,7 @@ module luna.http.tests {
     var mocks = {
         raw: new mock.MockRawRequest()
     };
-    var resource = new http.HttpResource<ITestObject>("/users/:userId", "userId");
+    var resource = http.HttpResource<ITestObject, any>("/users/:userId", "userId");
     resource.createRequest = function (config: IHttpConfig) {
         return new mock.MockHttpRequest(mocks.raw)
             .config(config);

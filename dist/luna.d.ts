@@ -41,10 +41,10 @@ declare module luna.http {
     }
 }
 declare module luna.http {
-    class HttpResource<T> {
-        private $$templateParts;
-        private $$idField;
-        constructor(templateUrl: string, idField?: string);
+    interface IHttpResource<T, TSub> {
+        templateUrl: string;
+        idField: string;
+        (baseId: any): TSub;
         get(id: any): Promise<T>;
         query(query: any): Promise<T[]>;
         post(t: T): Promise<T>;
@@ -53,6 +53,8 @@ declare module luna.http {
         createUrl(id?: any): string;
         createRequest(config: IHttpConfig): IHttpRequest;
     }
+    function HttpResource<T, TSub>(templateUrl: string, idField?: string, subs?: any): IHttpResource<T, TSub>;
+    function SubHttpResource<T, TSub>(baseUrl: string, resource: IHttpResource<T, TSub>): IHttpResource<T, TSub>;
 }
 declare module luna.http {
     interface IHttpResponse {
@@ -104,4 +106,6 @@ declare module luna.http {
         open(method: string, url: string, async?: boolean, user?: string, password?: string): void;
         send(data?: any): void;
     }
+}
+declare module luna.polyfill {
 }
