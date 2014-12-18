@@ -16,11 +16,11 @@ var resource = new luna.http.HttpResource<IUser>("/users/:id");
 resource.get(1)
     .then(user => {
         //user.id
-    }, reason => {
-        //reason.status
-        //reason.statusText
-        //reason.isTimeout
-        //reason.isCancel
+    }, status => {
+        //status.code
+        //status.text
+        //status.isTimeout
+        //status.isCancel
     });
 ```
 
@@ -34,10 +34,10 @@ var resource = new luna.http.HttpResource<IUser>("/users/:uid", "uid");
 resource.get(...)
     .then(user => {
         //user.uid
-    }, reason => {
-        //reason.status
-        //reason.statusText
-        //reason.isTimeout
-        //reason.isCancel
+    }, status => {
+        //status.code
+        //status.text
+        //status.isTimeout
+        //status.isCancel
     });
 ```

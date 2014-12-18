@@ -41,9 +41,9 @@ module luna.http.tests {
             .then(res => {
                 start();
                 strictEqual(res.id, 2);
-            }, reason => {
+            }, status => {
                 start();
-                strictEqual(false, reason);
+                strictEqual(false, status);
             });
     });
 
@@ -54,10 +54,10 @@ module luna.http.tests {
             .then(res => {
                 start();
                 ok(false, "404 should not succeed.");
-            }, reason => {
+            }, status => {
                 start();
-                strictEqual(reason.status, 404);
-                strictEqual(reason.statusText, "Not Found");
+                strictEqual(status.code, 404);
+                strictEqual(status.text, "Not Found");
             });
     });
 
@@ -68,9 +68,9 @@ module luna.http.tests {
             .then(res => {
                 start();
                 ok(false, "Timeout should not succeed.");
-            }, reason => {
+            }, status => {
                 start();
-                strictEqual(reason.isTimeout, true);
+                strictEqual(status.isTimeout, true);
             });
     });
 }

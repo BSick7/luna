@@ -53,8 +53,8 @@ var luna;
                 this.$$reject(http.HttpResponse.cancel(this.$$xhr));
                 return true;
             };
-            HttpRequest.prototype.$$isError = function (response) {
-                return response.status >= 400;
+            HttpRequest.prototype.$$isError = function (status) {
+                return status.code >= 400;
             };
             HttpRequest.prototype.then = function (onFulfilled, onRejected) {
                 return this.$$promise.then(onFulfilled, onRejected);
@@ -147,14 +147,14 @@ var luna;
                 this.isTimeout = false;
                 this.$$raw = xhr;
             }
-            Object.defineProperty(HttpResponse.prototype, "status", {
+            Object.defineProperty(HttpResponse.prototype, "code", {
                 get: function () {
                     return this.$$raw.status;
                 },
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(HttpResponse.prototype, "statusText", {
+            Object.defineProperty(HttpResponse.prototype, "text", {
                 get: function () {
                     return this.$$raw.statusText;
                 },

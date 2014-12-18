@@ -1,7 +1,7 @@
 module luna.http {
     export interface IHttpResponse {
-        status: number;
-        statusText: string;
+        code: number;
+        text: string;
         response: any;
         responseText: string;
         isCancel: boolean;
@@ -13,11 +13,11 @@ module luna.http {
         isCancel = false;
         isTimeout = false;
 
-        get status (): number {
+        get code (): number {
             return this.$$raw.status;
         }
 
-        get statusText (): string {
+        get text (): string {
             return this.$$raw.statusText;
         }
 

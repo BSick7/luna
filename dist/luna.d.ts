@@ -32,7 +32,7 @@ declare module luna.http {
         send(data: string): HttpRequest;
         send(data: FormData): HttpRequest;
         cancel(): boolean;
-        private $$isError(response);
+        private $$isError(status);
         then<U>(onFulfilled?: (value: HttpResponse) => Thenable<U>, onRejected?: (error: any) => Thenable<U>): Thenable<U>;
         then<U>(onFulfilled?: (value: HttpResponse) => Thenable<U>, onRejected?: (error: any) => U): Thenable<U>;
         then<U>(onFulfilled?: (value: HttpResponse) => Thenable<U>, onRejected?: (error: any) => void): Thenable<U>;
@@ -56,8 +56,8 @@ declare module luna.http {
 }
 declare module luna.http {
     interface IHttpResponse {
-        status: number;
-        statusText: string;
+        code: number;
+        text: string;
         response: any;
         responseText: string;
         isCancel: boolean;
@@ -67,8 +67,8 @@ declare module luna.http {
         private $$raw;
         isCancel: boolean;
         isTimeout: boolean;
-        status: number;
-        statusText: string;
+        code: number;
+        text: string;
         response: any;
         responseText: string;
         responseJson: any;
