@@ -40,7 +40,7 @@ module luna.http.tests {
         resource.get(2)
             .then(res => {
                 start();
-                deepEqual(res, {id: 2});
+                strictEqual(res.id, 2);
             }, reason => {
                 start();
                 strictEqual(false, reason);
