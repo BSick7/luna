@@ -12,7 +12,7 @@ By default, resource uses `id` field.
 interface IUser {
     id: number;
 }
-var resource = new luna.http.HttpResource<IUser>("/users/:id");
+var resource = luna.http.HttpResource<IUser>("/users/:id");
 resource.get(1)
     .then(user => {
         //user.id
@@ -30,7 +30,7 @@ This can be changed to use other fields like `uid`.
 interface IUser {
     uid: string;
 }
-var resource = new luna.http.HttpResource<IUser>("/users/:uid", "uid");
+var resource = luna.http.HttpResource<IUser>("/users/:uid", "uid");
 resource.get(...)
     .then(user => {
         //user.uid
@@ -58,10 +58,9 @@ interface IOrganizationResource {
     users: HttpResource<IUser>;
 }
 
-var orgs = luna.http.HttpResource<IOrganization>("/orgs/:id")
-    .sub<IOrganizationResource>({
-        users: luna.http.HttpResource<IUser>("/users/:id")
-    });
+var orgs = luna.http.HttpResource<IOrganization, IOrganizationResource>("/orgs/:id", null, {
+    users: luna.http.HttpResource<IUser>("/users/:id")
+});
 
 orgs.get(1).then(org => { }); //Get organization with id: 1
 orgs(1).users.get(2).then(user => { }); //Get user with id: 2 in organization id: 1
