@@ -41,9 +41,36 @@ module luna.http.tests {
             .then(res => {
                 start();
                 deepEqual(res, {id: 2});
-            }, err => {
+            }, reason => {
                 start();
-                strictEqual(false, err);
+                strictEqual(false, reason);
+            });
+    });
+
+    QUnit.asyncTest("GET 404", (assert) => {
+        mocks.raw = mock.MockRawRequest.makeError(404, "Not Found");
+
+        resource.get(2)
+            .then(res => {
+                start();
+                ok(false, "404 should not succeed.");
+            }, reason => {
+                start();
+                strictEqual(reason.status, 404);
+                strictEqual(reason.statusText, "Not Found");
+            });
+    });
+
+    QUnit.asyncTest("GET (timeout)", (assert) => {
+        mocks.raw = mock.MockRawRequest.makeTimeout();
+
+        resource.get(2)
+            .then(res => {
+                start();
+                ok(false, "Timeout should not succeed.");
+            }, reason => {
+                start();
+                strictEqual(reason.isTimeout, true);
             });
     });
 }
