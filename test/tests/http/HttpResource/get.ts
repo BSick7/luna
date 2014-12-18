@@ -14,6 +14,24 @@ module luna.http.tests {
             .config(config);
     };
 
+    QUnit.asyncTest("get (send)", (assert) => {
+        mocks.raw = mock.MockRawRequest.makeSuccess(200, "OK", {id: 2}, "{ id: 2 }");
+
+        resource.get(2)
+            .then(res => {
+                start();
+                deepEqual(mocks.raw.sent, {
+                    method: "GET",
+                    url: "/users/2",
+                    async: true,
+                    user: undefined,
+                    password: undefined,
+                    data: undefined,
+                    headers: {}
+                });
+            });
+    });
+
     QUnit.asyncTest("get 200", (assert) => {
         mocks.raw = mock.MockRawRequest.makeSuccess(200, "OK", {id: 2}, "{ id: 2 }");
 
