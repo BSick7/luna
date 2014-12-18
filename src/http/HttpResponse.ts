@@ -9,50 +9,50 @@ module luna.http {
     }
 
     export class HttpResponse implements IHttpResponse {
-        private $$xhr: XMLHttpRequest;
+        private $$raw: IRawRequest;
         isCancel = false;
         isTimeout = false;
 
         get status (): number {
-            return this.$$xhr.status;
+            return this.$$raw.status;
         }
 
         get statusText (): string {
-            return this.$$xhr.statusText;
+            return this.$$raw.statusText;
         }
 
         get response (): any {
-            return this.$$xhr.response;
+            return this.$$raw.response;
         }
 
         get responseText (): string {
-            return this.$$xhr.responseText;
+            return this.$$raw.responseText;
         }
 
         get responseJson (): any {
-            if (this.$$xhr.responseType === "json")
-                return this.$$xhr.response;
-            return JSON.parse(this.$$xhr.responseText);
+            if (this.$$raw.responseType === "json")
+                return this.$$raw.response;
+            return JSON.parse(this.$$raw.responseText);
         }
 
-        constructor (xhr: XMLHttpRequest) {
-            this.$$xhr = xhr;
+        constructor (xhr: IRawRequest) {
+            this.$$raw = xhr;
         }
 
-        static normal (xhr: XMLHttpRequest): HttpResponse {
+        static normal (xhr: IRawRequest): HttpResponse {
             var response = new HttpResponse(xhr);
             Object.freeze(this);
             return response;
         }
 
-        static timeout (xhr: XMLHttpRequest): HttpResponse {
+        static timeout (xhr: IRawRequest): HttpResponse {
             var response = new HttpResponse(xhr);
             response.isTimeout = true;
             Object.freeze(this);
             return response;
         }
 
-        static cancel (xhr: XMLHttpRequest): HttpResponse {
+        static cancel (xhr: IRawRequest): HttpResponse {
             var response = new HttpResponse(xhr);
             response.isCancel = true;
             Object.freeze(this);

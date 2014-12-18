@@ -14,7 +14,7 @@ module luna.http {
 
     export class HttpRequest implements IHttpRequest {
         private $$config: IHttpConfig;
-        private $$xhr = new XMLHttpRequest();
+        private $$xhr: IRawRequest;
         private $$resolve: (result: any) => void;
         private $$reject: (reason: any) => void;
         private $$promise: Promise<HttpResponse>;
@@ -24,6 +24,11 @@ module luna.http {
                 this.$$resolve = resolve;
                 this.$$reject = reject;
             });
+            this.$$xhr = this.createRawRequest();
+        }
+
+        createRawRequest (): IRawRequest {
+            return new XMLHttpRequest();
         }
 
         config (config: IHttpConfig): HttpRequest {

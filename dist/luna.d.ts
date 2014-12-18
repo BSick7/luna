@@ -21,6 +21,7 @@ declare module luna.http {
         private $$reject;
         private $$promise;
         constructor();
+        createRawRequest(): IRawRequest;
         config(config: IHttpConfig): HttpRequest;
         header(name: string, value: string): HttpRequest;
         send(): HttpRequest;
@@ -63,7 +64,7 @@ declare module luna.http {
         isTimeout: boolean;
     }
     class HttpResponse implements IHttpResponse {
-        private $$xhr;
+        private $$raw;
         isCancel: boolean;
         isTimeout: boolean;
         status: number;
@@ -71,10 +72,10 @@ declare module luna.http {
         response: any;
         responseText: string;
         responseJson: any;
-        constructor(xhr: XMLHttpRequest);
-        static normal(xhr: XMLHttpRequest): HttpResponse;
-        static timeout(xhr: XMLHttpRequest): HttpResponse;
-        static cancel(xhr: XMLHttpRequest): HttpResponse;
+        constructor(xhr: IRawRequest);
+        static normal(xhr: IRawRequest): HttpResponse;
+        static timeout(xhr: IRawRequest): HttpResponse;
+        static cancel(xhr: IRawRequest): HttpResponse;
     }
 }
 declare module luna.http {
@@ -85,5 +86,22 @@ declare module luna.http {
         password?: string;
         timeout?: number;
         type?: string;
+    }
+}
+declare module luna.http {
+    interface IRawRequest {
+        status: number;
+        statusText: string;
+        response: any;
+        responseText: string;
+        responseType: string;
+        timeout: number;
+        onload: (ev: Event) => any;
+        ontimeout: (ev: Event) => any;
+        onerror: (ev: ErrorEvent) => any;
+        setRequestHeader(header: string, value: string): any;
+        abort(): any;
+        open(method: string, url: string, async?: boolean, user?: string, password?: string): void;
+        send(data?: any): void;
     }
 }

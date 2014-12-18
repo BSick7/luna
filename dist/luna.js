@@ -9,12 +9,15 @@ var luna;
         var HttpRequest = (function () {
             function HttpRequest() {
                 var _this = this;
-                this.$$xhr = new XMLHttpRequest();
                 this.$$promise = new Promise(function (resolve, reject) {
                     _this.$$resolve = resolve;
                     _this.$$reject = reject;
                 });
+                this.$$xhr = this.createRawRequest();
             }
+            HttpRequest.prototype.createRawRequest = function () {
+                return new XMLHttpRequest();
+            };
             HttpRequest.prototype.config = function (config) {
                 var curconfig = this.$$config = this.$$config || { method: "GET", url: "" };
                 for (var i = 0, keys = Object.keys(config); i < keys.length; i++) {
@@ -139,41 +142,41 @@ var luna;
             function HttpResponse(xhr) {
                 this.isCancel = false;
                 this.isTimeout = false;
-                this.$$xhr = xhr;
+                this.$$raw = xhr;
             }
             Object.defineProperty(HttpResponse.prototype, "status", {
                 get: function () {
-                    return this.$$xhr.status;
+                    return this.$$raw.status;
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(HttpResponse.prototype, "statusText", {
                 get: function () {
-                    return this.$$xhr.statusText;
+                    return this.$$raw.statusText;
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(HttpResponse.prototype, "response", {
                 get: function () {
-                    return this.$$xhr.response;
+                    return this.$$raw.response;
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(HttpResponse.prototype, "responseText", {
                 get: function () {
-                    return this.$$xhr.responseText;
+                    return this.$$raw.responseText;
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(HttpResponse.prototype, "responseJson", {
                 get: function () {
-                    if (this.$$xhr.responseType === "json")
-                        return this.$$xhr.response;
-                    return JSON.parse(this.$$xhr.responseText);
+                    if (this.$$raw.responseType === "json")
+                        return this.$$raw.response;
+                    return JSON.parse(this.$$raw.responseText);
                 },
                 enumerable: true,
                 configurable: true
