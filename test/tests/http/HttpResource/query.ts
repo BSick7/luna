@@ -5,22 +5,15 @@ module luna.http.tests {
 
     QUnit.module("HttpResource.query");
 
-    var mocks = {
-        raw: new mock.MockRawRequest()
-    };
     var resource = http.HttpResource<ITestObject, any>("/users/:userId", "userId");
-    resource.createRequest = function (config: IHttpConfig) {
-        return new mock.MockHttpRequest(mocks.raw)
-            .config(config);
-    };
 
     QUnit.asyncTest("query (send)", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeSuccess(200, "OK", [{id: 2}], "[{ id: 2 }]");
+        var mockresult = mock.MockRawRequest.makeSuccess(200, "OK", [{id: 2}], "[{ id: 2 }]");
 
-        resource.query({name: "Test"})
+        mock.fakeResource(resource, mockresult).query({name: "Test"})
             .then(res => {
                 start();
-                deepEqual(mocks.raw.sent, {
+                deepEqual(mockresult.sent, {
                     method: "GET",
                     url: "/users/",
                     async: true,
@@ -33,9 +26,9 @@ module luna.http.tests {
     });
 
     QUnit.asyncTest("query 200", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeSuccess(200, "OK", [{id: 2}], "[{ id: 2 }]");
+        var mockresult = mock.MockRawRequest.makeSuccess(200, "OK", [{id: 2}], "[{ id: 2 }]");
 
-        resource.query({})
+        mock.fakeResource(resource, mockresult).query({})
             .then(res => {
                 start();
                 strictEqual(res.length, 1);
@@ -46,9 +39,9 @@ module luna.http.tests {
     });
 
     QUnit.asyncTest("query 404", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeError(404, "Not Found");
+        var mockresult = mock.MockRawRequest.makeError(404, "Not Found");
 
-        resource.query({})
+        mock.fakeResource(resource, mockresult).query({})
             .then(res => {
                 start();
                 ok(false, "404 should not succeed.");
@@ -60,9 +53,9 @@ module luna.http.tests {
     });
 
     QUnit.asyncTest("query (timeout)", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeTimeout();
+        var mockresult = mock.MockRawRequest.makeTimeout();
 
-        resource.query({})
+        mock.fakeResource(resource, mockresult).query({})
             .then(res => {
                 start();
                 ok(false, "Timeout should not succeed.");

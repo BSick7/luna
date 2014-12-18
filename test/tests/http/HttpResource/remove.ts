@@ -5,22 +5,15 @@ module luna.http.tests {
 
     QUnit.module("HttpResource.remove");
 
-    var mocks = {
-        raw: new mock.MockRawRequest()
-    };
     var resource = http.HttpResource<ITestObject, any>("/users/:userId", "userId");
-    resource.createRequest = function (config: IHttpConfig) {
-        return new mock.MockHttpRequest(mocks.raw)
-            .config(config);
-    };
 
     QUnit.asyncTest("remove (send)", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeSuccess(200, "OK", {id: 2}, "{ id: 2 }");
+        var mockresult = mock.MockRawRequest.makeSuccess(200, "OK", {id: 2}, "{ id: 2 }");
 
-        resource.remove(2)
+        mock.fakeResource(resource, mockresult).remove(2)
             .then(res => {
                 start();
-                deepEqual(mocks.raw.sent, {
+                deepEqual(mockresult.sent, {
                     method: "DELETE",
                     url: "/users/2",
                     async: true,
@@ -33,9 +26,9 @@ module luna.http.tests {
     });
 
     QUnit.asyncTest("remove 200", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeSuccess(200, "OK", undefined, "");
+        var mockresult = mock.MockRawRequest.makeSuccess(200, "OK", undefined, "");
 
-        resource.remove(2)
+        mock.fakeResource(resource, mockresult).remove(2)
             .then(res => {
                 start();
                 ok(true);
@@ -46,9 +39,9 @@ module luna.http.tests {
     });
 
     QUnit.asyncTest("remove 404", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeError(404, "Not Found");
+        var mockresult = mock.MockRawRequest.makeError(404, "Not Found");
 
-        resource.remove(2)
+        mock.fakeResource(resource, mockresult).remove(2)
             .then(res => {
                 start();
                 ok(false, "404 should not succeed.");
@@ -60,9 +53,9 @@ module luna.http.tests {
     });
 
     QUnit.asyncTest("remove (timeout)", (assert) => {
-        mocks.raw = mock.MockRawRequest.makeTimeout();
+        var mockresult = mock.MockRawRequest.makeTimeout();
 
-        resource.remove(2)
+        mock.fakeResource(resource, mockresult).remove(2)
             .then(res => {
                 start();
                 ok(false, "Timeout should not succeed.");
